@@ -1,4 +1,4 @@
 
 # Toto's Amazing Bytecode Language (Epic)
 
-Table (pronounce [tabl]) is a programming language still in developpement.
+Table (pronounce [tabl] please) is a programming language still in developpement.
