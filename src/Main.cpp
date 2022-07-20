@@ -5,9 +5,19 @@ int main(int argc, char* argv[])
 {
     std::cout << "Hi mom!" << std::endl;
 
-    unsigned char bytes[] = { NOOP, NOOP, NOOP };
+    unsigned char bytes[] = 
+    {
+        LITERAL, 0x01,
+        LITERAL, 0x02,
+        SUBTRACT,
+        LITERAL, 0x04,
+        DIVIDE
+    };
+    const unsigned int size = sizeof(bytes);
+
     Bytecode bytecode;
-    bytecode.Create<3>(bytes);
+    bytecode.Create<size>(bytes);
+
     Interpreter interpreter;
     interpreter.Interpret(bytecode);
 
