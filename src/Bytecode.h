@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iterator>
+
 class Bytecode
 {
 public:
@@ -18,6 +20,15 @@ public:
     unsigned int GetSize()
     {
         return m_Size;
+    }
+
+    unsigned char operator[](int i) const
+    {
+        if (i < m_Size)
+        {
+            return m_Bytes[i];
+        }
+        return 0x00;
     }
 
 private:
