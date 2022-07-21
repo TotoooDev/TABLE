@@ -32,6 +32,6 @@ public:
     }
 
 private:
-    unsigned char* m_Bytes = nullptr;
+    unsigned char* m_Bytes;
     unsigned int m_Size = 0;
 };

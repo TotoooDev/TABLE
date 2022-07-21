@@ -13,6 +13,7 @@ public:
     void Interpret(Bytecode bytecode)
     {
         unsigned int size = bytecode.GetSize();
+        // Loop through every instruction in the bytecode
         for (unsigned int i = 0; i < size; i++)
         {
             switch (bytecode[i])
@@ -31,6 +32,13 @@ public:
                 break;
             }
 
+            case POP:
+            {
+                m_Stack.Pop();
+                std::cout << "Popped a value from the stack" << std::endl;
+                break;
+            }
+
             case ADD:
             {
                 unsigned char a = m_Stack.Pop();
@@ -45,7 +53,7 @@ public:
                 unsigned char a = m_Stack.Pop();
                 unsigned char b = m_Stack.Pop();
                 m_Stack.Push(a - b);
-                std::cout << "Subtracted " << (int)a << " to " << (int)b << std::endl;
+                std::cout << "Subtracted " << (int)b << " to " << (int)a << std::endl;
                 break;
             }
 
@@ -82,6 +90,30 @@ public:
                 unsigned char value = m_Variables.GetValue(slot);
                 m_Stack.Push(value);
                 std::cout << "Got value " << (int)value << " from slot " << (int)slot << std::endl;
+                break;
+            }
+
+            case JUMP:
+            {
+                unsigned char adress = m_Stack.Pop();
+                i = adress;
+                std::cout << "Jumped to adress " << (int)adress << std::endl;
+                break;
+            }
+
+            case JUMP_NZ:
+            {
+                unsigned char condition = m_Stack.Pop();
+                unsigned char adress = m_Stack.Pop();
+                if (condition != 0)
+                {
+                    i = adress - 1;
+                    std::cout << "Jumped to adress " << (int)adress << ", condition was " << (int)condition << std::endl;
+                }
+                else
+                {
+                    std::cout << "Did not jump to adress " << (int)adress << ", condition was " << (int)condition << std::endl;
+                }
                 break;
             }
 
