@@ -117,6 +117,33 @@ public:
                 break;
             }
 
+            case START_IF:
+            {
+                // Find the closest END_IF to jump to
+                int adress = -1;
+                for (int j = i; j < size; j++)
+                {
+                    if (bytecode[j] == END_IF)
+                    {
+                        adress = j;
+                        break;
+                    }
+                }
+                if (adress == -1)
+                {
+                    std::cout << "No closing END_IF!" << std::endl;
+                    break;
+                }
+
+                unsigned char condition = m_Stack.Pop();
+                if (!condition)
+                {
+                    i = adress - 1;
+                }
+                break;
+            }
+
+            case END_IF:
             default:
                 break;
             }

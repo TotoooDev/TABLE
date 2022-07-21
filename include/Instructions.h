@@ -20,5 +20,7 @@ enum Instructions
 
     // JUMP AND CONDITIONS
     JUMP     = 0x09, // Pop a literal as the adress of the bytecode to jump to
-    JUMP_NZ  = 0x0A  // Pop a literal as the condition and a literal as the adress of the bytecode to jump to
+    JUMP_NZ  = 0x0A, // Pop a literal as the condition and a literal as the adress of the bytecode to jump to
+    START_IF = 0x0B, // Pop a literal to get the condition of the if statement
+    END_IF   = 0x0C  // Does nothing but you need one to know when the if statement is closed
 };

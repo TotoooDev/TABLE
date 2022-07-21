@@ -5,7 +5,7 @@ Table [tabl] is a programming language still in developpement.
 
 # TODO
 
-- [ ] Jumps and conditions
+- [x] Jumps and conditions
 - [ ] Functions
 - [ ] Error messages
 - [ ] Real syntax from a string
