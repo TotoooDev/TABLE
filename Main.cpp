@@ -3,8 +3,6 @@
 
 int main(int argc, char* argv[])
 {
-    std::cout << "Hi mom!" << std::endl;
-
     unsigned char loop5times[] = 
     {
         LITERAL, 0x05, // Value of the variable, we use it as the numbre of time we want to iterate

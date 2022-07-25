@@ -6,36 +6,47 @@
 #include "Stack.h"
 #include "VariableStack.h"
 #include "Instructions.h"
+#include "Log.h"
 
 class Interpreter
 {
 public:
     void Interpret(Bytecode bytecode)
     {
+        Preprocess(bytecode);
+
         unsigned int size = bytecode.GetSize();
         // Loop through every instruction in the bytecode
         for (unsigned int i = 0; i < size; i++)
         {
-            switch (bytecode[i])
+            if (Logger::Get().HasWarnings())
             {
-            case NOOP:
+                for (auto& warning : Logger::Get().GetWarnings())
+                {
+                    std::cout << warning << std::endl;
+                }
+            }
+            if (Logger::Get().HasErrors())
             {
-                std::cout << "NOOP" << std::endl;
+                for (auto& error : Logger::Get().GetErrors())
+                {
+                    std::cout << error << std::endl;
+                }
                 break;
             }
 
+            switch (bytecode[i])
+            {
             case LITERAL:
             {
                 unsigned char value = bytecode[++i];
                 m_Stack.Push(value);
-                std::cout << "Literal of value " << (int)value << " pushed to the stack" << std::endl;
                 break;
             }
 
             case POP:
             {
                 m_Stack.Pop();
-                std::cout << "Popped a value from the stack" << std::endl;
                 break;
             }
 
@@ -44,7 +55,6 @@ public:
                 unsigned char a = m_Stack.Pop();
                 unsigned char b = m_Stack.Pop();
                 m_Stack.Push(a + b);
-                std::cout << "Added " << (int)a << " and " << (int)b << std::endl;
                 break;
             }
 
@@ -53,7 +63,6 @@ public:
                 unsigned char a = m_Stack.Pop();
                 unsigned char b = m_Stack.Pop();
                 m_Stack.Push(a - b);
-                std::cout << "Subtracted " << (int)b << " to " << (int)a << std::endl;
                 break;
             }
 
@@ -62,7 +71,6 @@ public:
                 unsigned char a = m_Stack.Pop();
                 unsigned char b = m_Stack.Pop();
                 m_Stack.Push(a * b);
-                std::cout << "Multiplied " << (int)a << " and " << (int)b << std::endl;
                 break;
             }
 
@@ -71,7 +79,6 @@ public:
                 unsigned char a = m_Stack.Pop();
                 unsigned char b = m_Stack.Pop();
                 m_Stack.Push(a / b);
-                std::cout << "Divided " << (int)a << " by " << (int)b << std::endl;
                 break;
             }
 
@@ -80,7 +87,6 @@ public:
                 unsigned char slot = m_Stack.Pop();
                 unsigned char value = m_Stack.Pop();
                 m_Variables.SetSlot(slot, value);
-                std::cout << "Stored value " << (int)value << " in slot " << (int)slot << std::endl;
                 break;
             }
 
@@ -89,7 +95,6 @@ public:
                 unsigned char slot = m_Stack.Pop();
                 unsigned char value = m_Variables.GetValue(slot);
                 m_Stack.Push(value);
-                std::cout << "Got value " << (int)value << " from slot " << (int)slot << std::endl;
                 break;
             }
 
@@ -97,7 +102,6 @@ public:
             {
                 unsigned char adress = m_Stack.Pop();
                 i = adress;
-                std::cout << "Jumped to adress " << (int)adress << std::endl;
                 break;
             }
 
@@ -108,11 +112,6 @@ public:
                 if (condition != 0)
                 {
                     i = adress - 1;
-                    std::cout << "Jumped to adress " << (int)adress << ", condition was " << (int)condition << std::endl;
-                }
-                else
-                {
-                    std::cout << "Did not jump to adress " << (int)adress << ", condition was " << (int)condition << std::endl;
                 }
                 break;
             }
@@ -120,7 +119,7 @@ public:
             case START_IF:
             {
                 // Find the closest END_IF to jump to
-                int adress = -1;
+                unsigned int adress = 0;
                 for (int j = i; j < size; j++)
                 {
                     if (bytecode[j] == END_IF)
@@ -128,11 +127,6 @@ public:
                         adress = j;
                         break;
                     }
-                }
-                if (adress == -1)
-                {
-                    std::cout << "No closing END_IF!" << std::endl;
-                    break;
                 }
 
                 unsigned char condition = m_Stack.Pop();
@@ -143,6 +137,7 @@ public:
                 break;
             }
 
+            case NOOP:
             case END_IF:
             default:
                 break;
@@ -151,6 +146,37 @@ public:
     }
 
 private:
+    void Preprocess(Bytecode bytecode)
+    {
+        unsigned int size = bytecode.GetSize();
+        unsigned int numStartIf = 0;
+        unsigned int numEndIf = 0;
+        for (unsigned int i = 0; i < size; i++)
+        {
+            switch (bytecode[i])
+            {
+            case START_IF:
+            {
+                numStartIf++;
+                break;
+            }
+
+            case END_IF:
+            {
+                numEndIf++;
+                break;
+            }
+
+            default:
+                break;
+            }
+        }
+        if (numStartIf != numEndIf)
+        {
+            Logger::Get().AddError(NO_MATCHING_END_IF);
+        }
+    }
+
     Stack m_Stack;
     VariableStack m_Variables;
 };

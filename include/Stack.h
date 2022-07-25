@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "Log.h"
+
 class Stack
 {
 public:
@@ -19,7 +21,7 @@ public:
     {
         if (m_Index == MaxSize - 1)
         {
-            std::cout << "Stack is full!" << std::endl;
+            Logger::Get().AddError(STACK_OVERFLOW);
             return;
         }
 
@@ -31,8 +33,8 @@ public:
     {
         if (m_Index == 0)
         {
-            std::cout << "Stack is empty!" << std::endl;
-            return 0x00;
+            Logger::Get().AddError(STACK_UNDERFLOW);
+            return 0xFF;
         }
 
         m_Index--;
