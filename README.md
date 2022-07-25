@@ -1,7 +1,7 @@
 
 # Toto's Amazing Bytecode Language (Epic)
 
-Table [tabl] is a programming language still in developpement.
+Table is a programming language still in developpement.
 
 # TODO
 
