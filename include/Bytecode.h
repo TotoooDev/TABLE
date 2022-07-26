@@ -22,7 +22,7 @@ public:
         return m_Size;
     }
 
-    unsigned char operator[](int i) const
+    unsigned char operator[](unsigned int i) const
     {
         if (i < m_Size)
         {

@@ -37,19 +37,22 @@ public:
 
             switch (bytecode[i])
             {
+
+            #pragma region STACK_INSTRUCTIONS
             case LITERAL:
             {
                 unsigned char value = bytecode[++i];
                 m_Stack.Push(value);
                 break;
             }
-
             case POP:
             {
                 m_Stack.Pop();
                 break;
             }
+            #pragma endregion STACK_INSTRUCTIONS
 
+            #pragma region OPERATIONS
             case ADD:
             {
                 unsigned char a = m_Stack.Pop();
@@ -57,7 +60,6 @@ public:
                 m_Stack.Push(a + b);
                 break;
             }
-
             case SUBTRACT:
             {
                 unsigned char a = m_Stack.Pop();
@@ -65,7 +67,6 @@ public:
                 m_Stack.Push(a - b);
                 break;
             }
-
             case MULTIPLY:
             {
                 unsigned char a = m_Stack.Pop();
@@ -73,7 +74,6 @@ public:
                 m_Stack.Push(a * b);
                 break;
             }
-
             case DIVIDE:
             {
                 unsigned char a = m_Stack.Pop();
@@ -81,7 +81,9 @@ public:
                 m_Stack.Push(a / b);
                 break;
             }
+            #pragma endregion OPERATIONS
 
+            #pragma region VARIABLES
             case STORE:
             {
                 unsigned char slot = m_Stack.Pop();
@@ -89,7 +91,6 @@ public:
                 m_Variables.SetSlot(slot, value);
                 break;
             }
-
             case GET:
             {
                 unsigned char slot = m_Stack.Pop();
@@ -97,14 +98,15 @@ public:
                 m_Stack.Push(value);
                 break;
             }
+            #pragma endregion VARIABLES
 
+            #pragma region JUMP_AND_CONDITIONS
             case JUMP:
             {
                 unsigned char adress = m_Stack.Pop();
                 i = adress;
                 break;
             }
-
             case JUMP_NZ:
             {
                 unsigned char condition = m_Stack.Pop();
@@ -115,12 +117,11 @@ public:
                 }
                 break;
             }
-
             case START_IF:
             {
                 // Find the closest END_IF to jump to
                 unsigned int adress = 0;
-                for (int j = i; j < size; j++)
+                for (unsigned int j = i; j < size; j++)
                 {
                     if (bytecode[j] == END_IF)
                     {
@@ -136,6 +137,111 @@ public:
                 }
                 break;
             }
+            #pragma endregion JUMP_AND_CONDITIONS
+
+            #pragma region INPUT_OUTPUT
+            case USER_CHAR:
+            {
+                unsigned char value;
+                std::cin >> value;
+                m_Stack.Push(value);
+                break;
+            }
+            case USER_INT:
+            {
+                unsigned int value;
+                std::cin >> value;
+                m_Stack.Push(value);
+                break;
+            }
+            case OUTPUT:
+            {
+                unsigned char value = m_Stack.Pop();
+                std::cout << value << std::endl;
+                break;
+            }
+            case OUTPUT_INT:
+            {
+                unsigned int value = m_Stack.Pop(); // Wat
+                std::cout << value << std::endl;
+                break;
+            }
+            #pragma endregion INPUT_OUTPUT
+
+            #pragma region OPERATORS
+            case EQUAL:
+            {
+                unsigned char a = m_Stack.Pop();
+                unsigned char b = m_Stack.Pop();
+                if (a == b)
+                {
+                    m_Stack.Push(0x01);
+                    break;
+                }
+                m_Stack.Push(0x00);
+                break;
+            }
+            case NOT:
+            {
+                unsigned char a = m_Stack.Pop();
+                unsigned char b = m_Stack.Pop();
+                if (a != b)
+                {
+                    m_Stack.Push(0x01);
+                    break;
+                }
+                m_Stack.Push(0x00);
+                break;
+            }
+            case LESS:
+            {
+                unsigned char a = m_Stack.Pop();
+                unsigned char b = m_Stack.Pop();
+                if (a < b)
+                {
+                    m_Stack.Push(0x01);
+                    break;
+                }
+                m_Stack.Push(0x00);
+                break;
+            }
+            case MORE:
+            {
+                unsigned char a = m_Stack.Pop();
+                unsigned char b = m_Stack.Pop();
+                if (a > b)
+                {
+                    m_Stack.Push(0x01);
+                    break;
+                }
+                m_Stack.Push(0x00);
+                break;
+            }
+            case LESS_EQ:
+            {
+                unsigned char a = m_Stack.Pop();
+                unsigned char b = m_Stack.Pop();
+                if (a <= b)
+                {
+                    m_Stack.Push(0x01);
+                    break;
+                }
+                m_Stack.Push(0x00);
+                break;
+            }
+            case MORE_EQ:
+            {
+                unsigned char a = m_Stack.Pop();
+                unsigned char b = m_Stack.Pop();
+                if (a >= b)
+                {
+                    m_Stack.Push(0x01);
+                    break;
+                }
+                m_Stack.Push(0x00);
+                break;
+            }
+            #pragma endregion OPERATORS
 
             case NOOP:
             case END_IF:

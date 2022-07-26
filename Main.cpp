@@ -38,13 +38,21 @@ int main(int argc, char* argv[])
         END_IF
     };
 
-    const unsigned int size = sizeof(conditions);
+    unsigned char userInput[] =
+    {
+        LITERAL, 0x01,
+        USER_CHAR,
+        OUTPUT
+    };
+
+    const unsigned int size = sizeof(userInput);
 
     Bytecode bytecode;
-    bytecode.Create<size>(conditions);
+    bytecode.Create<size>(userInput);
 
     Interpreter interpreter;
     interpreter.Interpret(bytecode);
 
+    std::cin.get();
     return 0;
 }
