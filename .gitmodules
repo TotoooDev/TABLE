@@ -1,3 +1,0 @@
-[submodule "include/lexy"]
-	path = include/lexy
-	url = https://github.com/foonathan/lexy
