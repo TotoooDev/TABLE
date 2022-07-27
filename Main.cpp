@@ -1,5 +1,5 @@
 #include <iostream>
-#include "TABLE.h"
+#include "TABLE.hpp"
 
 int main(int argc, char* argv[])
 {
