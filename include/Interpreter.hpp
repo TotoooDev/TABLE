@@ -113,6 +113,18 @@ public:
                 m_FloatVariables.SetSlot(slot, value);
                 break;
             }
+            case STORE_STR:
+            {
+                unsigned char slot = m_Stack.Pop();
+                std::string value = "";
+                char byte;
+                while ((byte = m_Stack.Pop()) != 0x00)
+                {
+                    
+                }
+                m_StringVariables.SetSlot(slot, value);
+                break;
+            }
             case GET_CHAR:
             {
                 unsigned char slot = m_Stack.Pop();
