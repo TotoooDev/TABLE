@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <string>
 
 #include "Bytecode.hpp"
 #include "Stack.hpp"
@@ -83,17 +84,39 @@ public:
             #pragma endregion OPERATIONS
 
             #pragma region VARIABLES
-            case STORE:
+            case STORE_CHAR:
             {
                 unsigned char slot = m_Stack.Pop();
                 unsigned char value = m_Stack.Pop();
-                m_Variables.SetSlot(slot, value);
+                m_CharVariables.SetSlot(slot, value);
                 break;
             }
-            case GET:
+            case STORE_INT:
             {
                 unsigned char slot = m_Stack.Pop();
-                unsigned char value = m_Variables.GetValue(slot);
+                int byte0 = m_Stack.Pop();
+                int byte1 = m_Stack.Pop();
+                int byte2 = m_Stack.Pop();
+                int byte3 = m_Stack.Pop();
+                int value = byte0 << 24 | byte1 << 16 | byte2 << 8 | byte3;
+                m_CharVariables.SetSlot(slot, value);
+                break;
+            }
+            case STORE_FLT:
+            {
+                unsigned char slot = m_Stack.Pop();
+                int byte0 = m_Stack.Pop();
+                int byte1 = m_Stack.Pop();
+                int byte2 = m_Stack.Pop();
+                int byte3 = m_Stack.Pop();
+                float value = *(float*)(byte0 << 24 | byte1 << 16 | byte2 << 8 | byte3); // Evil hack
+                m_FloatVariables.SetSlot(slot, value);
+                break;
+            }
+            case GET_CHAR:
+            {
+                unsigned char slot = m_Stack.Pop();
+                unsigned char value = m_CharVariables.GetValue(slot);
                 m_Stack.Push(value);
                 break;
             }
@@ -283,5 +306,8 @@ private:
     }
 
     Stack m_Stack;
-    VariableStack m_Variables;
+    VariableStack<char> m_CharVariables;
+    VariableStack<int> m_IntVariables;
+    VariableStack<float> m_FloatVariables;
+    VariableStack<std::string> m_StringVariables;
 };

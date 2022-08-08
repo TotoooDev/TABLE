@@ -1,0 +1,11 @@
+// This is a comment
+
+// The code is executed from top to bottom between the brackets
+[
+    // Variable declaration
+    // The initial value is needed
+    // <type> <name> = <initial value>
+    Int integer = 32
+    Float floatingPointNumber = 2.0
+    String characterString = "Hi mom!"
+]

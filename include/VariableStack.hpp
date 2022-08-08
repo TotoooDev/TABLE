@@ -1,5 +1,6 @@
 #pragma once
 
+template <typename T>
 class VariableStack
 {
 public:
@@ -13,7 +14,7 @@ public:
         }
     }
 
-    void SetSlot(unsigned char slot, unsigned char value)
+    void SetSlot(unsigned char slot, T value)
     {
         if (slot < MaxVariables)
         {
@@ -21,7 +22,7 @@ public:
         }
     }
 
-    unsigned char GetValue(unsigned char slot)
+    T GetValue(unsigned char slot)
     {
         if (slot < MaxVariables)
         {
@@ -30,5 +31,5 @@ public:
         return 0x00;
     }
 private:
-    unsigned char m_Variables[MaxVariables];
+    T m_Variables[MaxVariables];
 };
