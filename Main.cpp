@@ -1,54 +1,21 @@
-#include <iostream>
 #include "TABLE.hpp"
 
 int main(int argc, char* argv[])
 {
-    unsigned char loop5times[] = 
-    {
-        LITERAL, 0x05, // Value of the variable, we use it as the numbre of time we want to iterate
-        LITERAL, 0x00, // Slot of the variable
-        STORE,
-
-        LITERAL, 0x05, // Instruction to jump to (this one)
-        
-        LITERAL, 0x01, // Subtract one every loop
-        LITERAL, 0x00, // Slot of the variable
-        GET,           
-        SUBTRACT,      // Subtract one to the variable
-        LITERAL, 0x00, // Slot of the variable
-        STORE,         // Store the subtraction
-        LITERAL, 0x00,
-        GET,           // Get the new variable value
-
-        JUMP_NZ        // Jump to adress 0x05 if the variable is not zero
-    };
-
-    unsigned char conditions[] =
+    unsigned char bytes[] =
     {
         LITERAL, 0x01,
-        START_IF,
-            LITERAL, 0x69,
-            POP,
-        END_IF,
-        
-        LITERAL, 0x00,
-        START_IF,
-            LITERAL, 0x42,
-            POP,
-        END_IF
-    };
-
-    unsigned char userInput[] =
-    {
         LITERAL, 0x01,
-        USER_CHAR,
-        OUTPUT
+        LITERAL, 0x01,
+        LITERAL, 0x01,
+        LITERAL, 0x00,
+        STORE_STR
     };
 
-    const unsigned int size = sizeof(userInput);
+    const unsigned int size = sizeof(bytes);
 
     Bytecode bytecode;
-    bytecode.Create<size>(userInput);
+    bytecode.Create<size>(bytes);
 
     Interpreter interpreter;
     interpreter.Interpret(bytecode);

@@ -120,9 +120,12 @@ public:
                 char byte;
                 while ((byte = m_Stack.Pop()) != 0x00)
                 {
-                    
+                    value += byte;
+                    std::cout << (unsigned int)byte << std::endl;
+                    break;
                 }
                 m_StringVariables.SetSlot(slot, value);
+                std::cout << value << std::endl;
                 break;
             }
             case GET_CHAR:
